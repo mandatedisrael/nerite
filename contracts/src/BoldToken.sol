@@ -15,13 +15,13 @@ import "./Dependencies/Ownable.sol";
 import "./Interfaces/IBoldToken.sol";
 
 /*
- * --- Functionality added specific to the USDNer ---
+ * --- Functionality added specific to the USNDer ---
  *
  * 1) Transfer protection: blacklist of addresses that are invalid recipients (i.e. core Liquity contracts) in external
- * transfer() and transferFrom() calls. The purpose is to protect users from losing tokens by mistakenly sending USDNer directly to a Liquity
+ * transfer() and transferFrom() calls. The purpose is to protect users from losing tokens by mistakenly sending USNDer directly to a Liquity
  * core contract, when they should rather call the right function.
  *
- * 2) sendToPool() and returnFromPool(): functions callable only Liquity core contracts, which move USDNer tokens between Liquity <-> user.
+ * 2) sendToPool() and returnFromPool(): functions callable only Liquity core contracts, which move USNDer tokens between Liquity <-> user.
  */
 
  //INFO: permit involves approve, so invoke safeApproveFor in supertoken
@@ -121,14 +121,14 @@ contract BoldToken is CustomSuperTokenBase, Ownable, IBoldTokenCustom, UUPSProxy
     function _requireValidRecipient(address _recipient) internal view {
         require(
             _recipient != address(0) && _recipient != address(this),
-            "USDNer: Cannot transfer tokens directly to the Bold token contract or the zero address"
+            "USNDer: Cannot transfer tokens directly to the Bold token contract or the zero address"
         );
     }
 
     function _requireCallerIsBOorAP() internal view {
         require(
             borrowerOperationsAddresses[msg.sender] || activePoolAddresses[msg.sender],
-            "USDNer: Caller is not BO or AP"
+            "USNDer: Caller is not BO or AP"
         );
     }
 
@@ -136,12 +136,12 @@ contract BoldToken is CustomSuperTokenBase, Ownable, IBoldTokenCustom, UUPSProxy
         require(
             msg.sender == collateralRegistryAddress || borrowerOperationsAddresses[msg.sender]
                 || troveManagerAddresses[msg.sender] || stabilityPoolAddresses[msg.sender],
-            "USDNer: Caller is neither CR nor BorrowerOperations nor TroveManager nor StabilityPool"
+            "USNDer: Caller is neither CR nor BorrowerOperations nor TroveManager nor StabilityPool"
         );
     }
 
     function _requireCallerIsStabilityPool() internal view {
-        require(stabilityPoolAddresses[msg.sender], "USDNer: Caller is not the StabilityPool");
+        require(stabilityPoolAddresses[msg.sender], "USNDer: Caller is not the StabilityPool");
     }
 
     //[================================]
